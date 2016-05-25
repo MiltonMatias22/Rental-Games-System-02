@@ -249,7 +249,7 @@ public class JogoView extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_FecharActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_FecharActionPerformed
-        System.exit(0);
+         this.dispose();
     }//GEN-LAST:event_btn_FecharActionPerformed
 
     private void btn_NovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_NovoActionPerformed
@@ -416,7 +416,7 @@ JOptionPane.showMessageDialog(this,"Falha ao inserir Registro!");
       return true;
       }//fim método validarCampos
 
-        private boolean preencherJogo() throws Exception{
+       private boolean preencherJogo() throws Exception{
       jogo = new Jogo();//pega atributos da classe que se deseja trabalhar EX: classe Cliente
       jogo.setIdJogo(Integer.parseInt(Field_Id.getText()));
       jogo.setNomeJogo(Field_Nome.getText());

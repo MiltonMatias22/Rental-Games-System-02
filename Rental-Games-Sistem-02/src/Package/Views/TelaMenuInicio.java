@@ -44,7 +44,7 @@ public class TelaMenuInicio extends javax.swing.JFrame {
         jMenuItem4 = new javax.swing.JMenuItem();
         jMenuItemJogos = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
-        jMenuItem6 = new javax.swing.JMenuItem();
+        menu_Item_Sair = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
         jMenu4 = new javax.swing.JMenu();
 
@@ -100,6 +100,11 @@ public class TelaMenuInicio extends javax.swing.JFrame {
         jLabel1.setBounds(0, 0, 1610, 830);
 
         jMenu3.setText("File");
+        jMenu3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenu3ActionPerformed(evt);
+            }
+        });
 
         jMenuItem1.setText("Locação");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
@@ -127,8 +132,13 @@ public class TelaMenuInicio extends javax.swing.JFrame {
         jMenu3.add(jMenuItemJogos);
         jMenu3.add(jSeparator1);
 
-        jMenuItem6.setText("Sair");
-        jMenu3.add(jMenuItem6);
+        menu_Item_Sair.setText("Sair");
+        menu_Item_Sair.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menu_Item_SairActionPerformed(evt);
+            }
+        });
+        jMenu3.add(menu_Item_Sair);
         jMenu3.add(jSeparator2);
 
         jMenuBar2.add(jMenu3);
@@ -169,6 +179,9 @@ public class TelaMenuInicio extends javax.swing.JFrame {
 
     private void jButtonLocacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLocacaoActionPerformed
         // TODO add your handling code here:
+        LocacaoView locacaoview = new LocacaoView();
+        this.DesktopPane.add(locacaoview);
+        locacaoview.setVisible(true);
     }//GEN-LAST:event_jButtonLocacaoActionPerformed
 
     private void jButtonJogosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonJogosActionPerformed
@@ -184,6 +197,14 @@ public class TelaMenuInicio extends javax.swing.JFrame {
         this.DesktopPane.add(clienteView);
         clienteView.setVisible(true);
     }//GEN-LAST:event_jButtonClienteActionPerformed
+
+    private void jMenu3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu3ActionPerformed
+    
+    }//GEN-LAST:event_jMenu3ActionPerformed
+
+    private void menu_Item_SairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menu_Item_SairActionPerformed
+        System.exit(0);//sair do sistema
+    }//GEN-LAST:event_menu_Item_SairActionPerformed
 
     /**
      * @param args the command line arguments
@@ -235,9 +256,9 @@ public class TelaMenuInicio extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
-    private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItemJogos;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
+    private javax.swing.JMenuItem menu_Item_Sair;
     // End of variables declaration//GEN-END:variables
 }

@@ -16,6 +16,7 @@ public class Cliente {
     private String email;
 
     public Cliente() {
+        
     }
 
     public Cliente(Integer idCliente, String nomeCliente, String telefone, String email) {

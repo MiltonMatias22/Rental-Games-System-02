@@ -32,10 +32,10 @@ public class ClienteData {
         
         int registros = PS.executeUpdate();
         if(registros > 0){
-            JOptionPane.showMessageDialog(null,"Class Data: Registro inserido com suceesso!");
+            
         return true;
         }else{
-        JOptionPane.showMessageDialog(null,"class Data: Registro não foi inserido!");
+       
             return false;
         }       
     }//Fim método inserirRegistro()!

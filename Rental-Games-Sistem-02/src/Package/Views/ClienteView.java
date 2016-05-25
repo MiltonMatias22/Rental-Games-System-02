@@ -8,6 +8,7 @@ package Package.Views;
 import Package.Data.ClienteData;
 import javax.swing.JOptionPane;
 import Package.Model.Cliente;
+import Package.Control.ClienteControl;
 import java.util.Vector;
 import javax.swing.table.DefaultTableModel;
 /**
@@ -17,7 +18,9 @@ import javax.swing.table.DefaultTableModel;
 public class ClienteView extends javax.swing.JInternalFrame {
 Cliente cliente;
 ClienteData clienteData;
+ClienteControl clienteControl;
 int acao;
+boolean resultado;
     /**
      * Creates new form ClienteView
      */
@@ -26,7 +29,9 @@ int acao;
         try {
            cliente = new Cliente();
            clienteData = new ClienteData();
+           clienteControl = new ClienteControl();
            acao = 0;
+           resultado = false;
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Erro: "+e.getMessage());
         }
@@ -59,6 +64,7 @@ int acao;
         btn_Pesquisar = new javax.swing.JButton();
         btn_Editar = new javax.swing.JButton();
         btn_Cancelar = new javax.swing.JButton();
+        btn_Fechar = new javax.swing.JButton();
         BackGround_Img = new javax.swing.JLabel();
 
         setPreferredSize(new java.awt.Dimension(1595, 858));
@@ -115,7 +121,7 @@ int acao;
         label_Id.setForeground(new java.awt.Color(204, 204, 204));
         label_Id.setText("ID:");
         Panel_Cliente.add(label_Id);
-        label_Id.setBounds(750, 160, 60, 30);
+        label_Id.setBounds(750, 160, 80, 30);
 
         Label_IdCliente.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         Label_IdCliente.setForeground(new java.awt.Color(204, 204, 204));
@@ -214,6 +220,15 @@ int acao;
         Panel_Cliente.add(btn_Cancelar);
         btn_Cancelar.setBounds(140, 700, 130, 40);
 
+        btn_Fechar.setText("Fechar");
+        btn_Fechar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_FecharActionPerformed(evt);
+            }
+        });
+        Panel_Cliente.add(btn_Fechar);
+        btn_Fechar.setBounds(1370, 720, 140, 50);
+
         BackGround_Img.setIcon(new javax.swing.ImageIcon(getClass().getResource("/IMG/Tela-Cadastrar-Cliente.png"))); // NOI18N
         BackGround_Img.setText("Nome:");
         Panel_Cliente.add(BackGround_Img);
@@ -251,63 +266,20 @@ int acao;
     }//GEN-LAST:event_btn_NovoActionPerformed
 
     private void btn_SalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_SalvarActionPerformed
-        // TODO add your handling code here:
-              try{
-if(validarCampos()){
-   if(preencherCliente()){
-    if(acao == 1){
-         if(clienteData.inserirRegistro(cliente)){
-    
-    JOptionPane.showMessageDialog(this,"Dados Salvos com sucesso!");
-    limparCampos();//caso os campos estejam preenchidos
-        
-        field_Nome.setEditable(false);
-        field_Telenone.setEditable(false);
-        field_Email.setEditable(false);
-        field_Pesquisa.setEditable(true);
-
-        btn_Novo.setEnabled(true);
-        btn_Salvar.setEnabled(false);
-        btn_Excluir.setEnabled(false);
-        btn_Editar.setEnabled(false);
-        btn_Cancelar.setEnabled(false);
-
-}else{
-JOptionPane.showMessageDialog(this,"Falha ao inserir Registro!");
-}//fim salvar
-    }//fim iif acao 1
-    if(acao == 2){
-         if(clienteData.atualizar(cliente)){
-    
-    JOptionPane.showMessageDialog(this,"Dados Atualizados com sucesso!");
-    limparCampos();//caso os campos estejam preenchidos
-
-        
-        field_Nome.setEditable(false);
-        field_Telenone.setEditable(false);
-        field_Email.setEditable(false);
-        field_Email.setEditable(true);
-
-        btn_Novo.setEnabled(true);
-        btn_Salvar.setEnabled(false);
-        btn_Excluir.setEnabled(false);
-        btn_Editar.setEnabled(false);
-        btn_Cancelar.setEnabled(false);
-
-}else{
-JOptionPane.showMessageDialog(this,"Falha ao Atualizar Registro!");
-}//fim salvar
-    }
-//Salvar no banco de dados
-
-   
-  }//fim preencherObjetos
-}//fim validarCampos
-
-}catch(Exception erro){
-      JOptionPane.showMessageDialog(this,"Erro ao Atualizar registro: "+erro.getMessage());
-      }//fim catch
-      
+        if(validarCampos()){
+            try {                        
+            if(preencherCliente()){
+               if(clienteControl.salvarAtualizarRegistroCliente(cliente, acao)){
+                limparCampos();//caso os campos estejam preenchidos        
+                salvarDesabilitarBotoes();
+               }else{
+        JOptionPane.showMessageDialog(this,"Falha ao Salvar Registro!");           
+               }//fim               
+            }//fim preencherCliente
+            } catch (Exception e) {
+        JOptionPane.showMessageDialog(this,"Erro: "+e.getMessage());         
+            }
+        }//fim if(validarCampos())      
     }//GEN-LAST:event_btn_SalvarActionPerformed
 
     private void field_PesquisaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_field_PesquisaKeyReleased
@@ -322,30 +294,9 @@ JOptionPane.showMessageDialog(this,"Falha ao Atualizar Registro!");
               Table_Cliente.setModel(new DefaultTableModel(clienteData.pesquisar(objetoPesquisa), cabecalho));
 
             }else{
-              //Limpar Tabala
-                Table_Cliente.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "ID", "Nome do Cliente", "Telefone", "Email"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
+              //limpa linhas da tabela  
+              limparLinhasTabela();
+              
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this,"Erro ou pesquisar Cliente: "+e);
@@ -360,16 +311,17 @@ JOptionPane.showMessageDialog(this,"Falha ao Atualizar Registro!");
             String nome_Telefone = Table_Cliente.getModel().getValueAt(linha,2).toString();
             String nome_Email = Table_Cliente.getModel().getValueAt(linha,3).toString();
             
-            field_Nome.setEditable(false);
-            field_Telenone.setEditable(false);
-            field_Email.setEditable(false);
-            field_Pesquisa.setEditable(true);
-            
             Label_IdCliente.setText(id_Cliente);
             field_Nome.setText(nome_Cliente);
             field_Telenone.setText(nome_Telefone);
             field_Email.setText(nome_Email);
             
+            field_Nome.setEditable(false);
+            field_Telenone.setEditable(false);
+            field_Email.setEditable(false);
+            field_Pesquisa.setEditable(true);
+            
+               
             btn_Excluir.setEnabled(true);
             btn_Editar.setEnabled(true);
             btn_Salvar.setEnabled(false);
@@ -378,22 +330,12 @@ JOptionPane.showMessageDialog(this,"Falha ao Atualizar Registro!");
     }//GEN-LAST:event_Table_ClienteMouseClicked
 
     private void btn_ExcluirMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_ExcluirMouseClicked
-        try {
-            if(!Label_IdCliente.getText().equals("")){
-                if(JOptionPane.showConfirmDialog(this,
-                        "Deseja Excluir Esse Registro",
-                        "Excluir", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
-                if(clienteData.excluir(Integer.parseInt(Label_IdCliente.getText())))
-                    JOptionPane.showMessageDialog(this,"Registro Excluido Com Sucesso!");
-                    btn_CancelarMouseClicked(evt);
-                
-            }
-                
-                
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Erro ao Excluir!: "+e.getMessage());
-        }
+        if(!Label_IdCliente.getText().equals("")){
+        resultado = clienteControl.excluirRegistroCliente(Integer.parseInt(Label_IdCliente.getText()));
+         if(resultado == false){
+           btn_CancelarMouseClicked(evt);   
+         }
+        }  
     }//GEN-LAST:event_btn_ExcluirMouseClicked
 
     private void btn_EditarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_EditarMouseClicked
@@ -445,6 +387,10 @@ JOptionPane.showMessageDialog(this,"Falha ao Atualizar Registro!");
         btn_Cancelar.setEnabled(true);
     }//GEN-LAST:event_field_PesquisaMouseClicked
 
+    private void btn_FecharActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_FecharActionPerformed
+        this.dispose();// fechar janela
+    }//GEN-LAST:event_btn_FecharActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel BackGround_Img;
@@ -454,6 +400,7 @@ JOptionPane.showMessageDialog(this,"Falha ao Atualizar Registro!");
     private javax.swing.JButton btn_Cancelar;
     private javax.swing.JButton btn_Editar;
     private javax.swing.JButton btn_Excluir;
+    private javax.swing.JButton btn_Fechar;
     private javax.swing.JButton btn_Novo;
     private javax.swing.JButton btn_Pesquisar;
     private javax.swing.JButton btn_Salvar;
@@ -489,7 +436,7 @@ if(field_Nome.getText().equals("")){
         return true;
 }//fim método ValidarCampos()
 
-    private boolean preencherCliente() throws Exception{
+private boolean preencherCliente() throws Exception{
       cliente = new Cliente();//pega atributos da classe que se deseja trabalhar EX: classe Cliente
       cliente.setIdCliente(Integer.parseInt(Label_IdCliente.getText()));
       cliente.setNomeCliente(field_Nome.getText());
@@ -498,18 +445,34 @@ if(field_Nome.getText().equals("")){
       return true;
       }
 
-      private boolean limparCampos(){
+private boolean limparCampos(){
       Label_IdCliente.setText("0");
       field_Nome.setText("");
       field_Telenone.setText("");
       field_Email.setText("");
       field_Pesquisa.setText("");
-      
-       
-      
-      
+          
       //limpar linhas para tabela
-       Table_Cliente.setModel(new javax.swing.table.DefaultTableModel(
+       limparLinhasTabela();
+      return true;
+      }
+
+private boolean salvarDesabilitarBotoes(){
+        field_Nome.setEditable(false);
+        field_Telenone.setEditable(false);
+        field_Email.setEditable(false);
+        field_Pesquisa.setEditable(true);
+
+        btn_Novo.setEnabled(true);
+        btn_Salvar.setEnabled(false);
+        btn_Excluir.setEnabled(false);
+        btn_Editar.setEnabled(false);
+        btn_Cancelar.setEnabled(false); 
+    return true;
+}
+
+private  boolean limparLinhasTabela(){
+      Table_Cliente.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -532,10 +495,6 @@ if(field_Nome.getText().equals("")){
                 return canEdit [columnIndex];
             }
         });
-      return true;
-      }
- 
-
-
-
+    return true;
 }
+}//fim class ClienteView
