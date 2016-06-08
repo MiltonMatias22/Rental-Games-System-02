@@ -67,6 +67,7 @@ boolean resultado;
         btn_Fechar = new javax.swing.JButton();
         BackGround_Img = new javax.swing.JLabel();
 
+        setTitle("Formulário Cadastro de Cliente");
         setPreferredSize(new java.awt.Dimension(1595, 858));
 
         Panel_Cliente.setLayout(null);
